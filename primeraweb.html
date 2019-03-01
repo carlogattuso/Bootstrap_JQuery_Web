@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Repositories Tool</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+    <h2>GitHub</h2>
+    <h1>User Repository View Tool</h1>
+    <p>See the repositories of any user!</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-3">
+            <p>In this page you can enter an username and then you will see all his repositories in a table
+                showed in another page.</p>
+            <p>If the user does not exist, the repositories table will be empty.</p>
+        </div>
+        <div class="col-sm-3">
+            <p><b><i>Write an username and click the button to see his repositories.</i></b></p>
+            <div class="form-group">
+                <label for="usr">Username:</label>
+                <input type="text" id="username" class="form-control" id="usr" >
+            </div>
+            <button type="button" class="btn btn-default">Search User</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2><u>Repositories</u></h2>
+    <h3 id = "user">Default User</h3>
+    <table class="table table-bordered" id="tabla_repositorios">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Number of followers</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("texto").hide();
+        $("button").click(function(){
+            $("#user").text( $("#username").val());
+            $('#tabla_repositorios tbody tr').remove();
+            $.get( "https://api.github.com/users/"+ $("#username").val() + "/repos", function( data ) {
+                $.each(data, function (index, element) {
+                    var id = element.id;
+                    var name = element.name;
+                    var description = element.description;
+                    var number_followers = element.stargazers_count;
+                    var insertion = "<tr><td>" + id + "</td><td>" + name + "</td><td>" + description + "</td><td>" + number_followers + "</td></tr>";
+                    $("#tabla_repositorios tbody").append(insertion);
+                });
+            }, "json" );
+            $("#username").val('');
+        });
+    });
+</script>
+
+</body>
+</html>
